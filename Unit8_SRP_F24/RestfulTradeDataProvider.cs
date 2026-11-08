@@ -1,12 +1,13 @@
-using System;
+
+using System.Text.Json;
 using Unit8_SRP_F24.Contracts;
 
 namespace Unit8_SRP_F24;
 
 public class RestfulTradeDataProvider : ITradeDataProvider
 {
-    string url;
-    ILogger logger;
+    private readonly string url;
+    private readonly ILogger logger;
 
     public RestfulTradeDataProvider(string url, ILogger logger)
     {
@@ -16,8 +17,13 @@ public class RestfulTradeDataProvider : ITradeDataProvider
 
     public IEnumerable<string> ReadTradeData()
     {
-        logger.LogMessage("Reading trade data from Restful API: " + url);
-        // -------------- Add your code here to fetch trade data from the URL and return it as an IEnumerable<string> --------------
-        throw new NotImplementedException();
+        logger.LogMessage("Reading trade data from Restful API: {0}", url);
+
+        using HttpClient client = new HttpClient();
+        string json = client.GetStringAsync(url)
+            .GetAwaiter().GetResult();
+
+        return JsonSerializer.Deserialize<List<string>>(json)
+            ?? new List<string>();
     }
 }

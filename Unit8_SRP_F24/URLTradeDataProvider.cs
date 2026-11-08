@@ -1,11 +1,12 @@
+
 using Unit8_SRP_F24.Contracts;
 
 namespace Unit8_SRP_F24;
 
 public class URLTradeDataProvider : ITradeDataProvider
 {
-    private readonly string url;        // URL to fetch trade data from
-    private readonly ILogger logger;    //  Logger to log messages
+    private readonly string url;
+    private readonly ILogger logger;
 
     public URLTradeDataProvider(string url, ILogger logger)
     {
@@ -15,8 +16,14 @@ public class URLTradeDataProvider : ITradeDataProvider
 
     public IEnumerable<string> ReadTradeData()
     {
-        logger.LogMessage("Reading trade data from URL: " + url);
-        // -------------- Add your code here to fetch trade data from the URL and return it as an IEnumerable<string> --------------
-        throw new NotImplementedException();
+        logger.LogMessage("Reading trade data from URL: {0}", url);
+
+        using HttpClient client = new HttpClient();
+        string content = client.GetStringAsync(url)
+            .GetAwaiter().GetResult();
+
+        return content.Split(
+            new[] { "\r\n", "\n" },
+            StringSplitOptions.RemoveEmptyEntries);
     }
 }

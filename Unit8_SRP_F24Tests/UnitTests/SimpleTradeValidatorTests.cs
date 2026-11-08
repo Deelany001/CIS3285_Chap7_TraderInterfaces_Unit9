@@ -1,3 +1,4 @@
+
 using Unit8_SRP_F24;
 using Unit8_SRP_F24.Contracts;
 
@@ -66,6 +67,7 @@ public class SimpleTradeValidatorTests
         //Assert
         Assert.IsTrue(result);
     }
+
     [TestMethod()]
     public void TestAmount999()
     {
@@ -80,6 +82,7 @@ public class SimpleTradeValidatorTests
         //Assert
         Assert.IsFalse(result);
     }
+
     [TestMethod()]
     public void TestAmount1000()
     {
@@ -94,6 +97,7 @@ public class SimpleTradeValidatorTests
         //Assert
         Assert.IsTrue(result);
     }
+
     [TestMethod()]
     public void TestAmountNeg10000()
     {
@@ -108,6 +112,7 @@ public class SimpleTradeValidatorTests
         //Assert
         Assert.IsFalse(result);
     }
+
     [TestMethod()]
     public void TestAmount100k()
     {
@@ -122,6 +127,7 @@ public class SimpleTradeValidatorTests
         //Assert
         Assert.IsTrue(result);
     }
+
     [TestMethod()]
     public void TestAmount101k()
     {
@@ -136,9 +142,6 @@ public class SimpleTradeValidatorTests
         //Assert
         Assert.IsFalse(result);
     }
-
-
-
 
     [TestMethod]
     public void ValidFields_ReturnsTrue()
@@ -252,6 +255,21 @@ public class SimpleTradeValidatorTests
         Assert.IsFalse(isValid);
     }
 
+    [TestMethod()]
+    public void TestEmptyCurrencyString()
+    {
+        //Arrange
+        var logger = new ConsoleLogger();
+        var tradeValidator = new SimpleTradeValidator(logger);
+        string[] strData = { "", "4444", "1.00" };
+
+        //Act
+        bool result = tradeValidator.ValidateTradeData(strData, 1);
+
+        //Assert
+        Assert.IsFalse(result);
+    }
+
     private sealed class StubLogger : ILogger
     {
         public void LogMessage(string message, params object[] args)
@@ -259,4 +277,3 @@ public class SimpleTradeValidatorTests
         }
     }
 }
-
